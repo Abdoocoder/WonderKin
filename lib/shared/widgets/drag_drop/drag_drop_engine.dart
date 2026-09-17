@@ -3,8 +3,8 @@
 import 'dart:math' show cos, sin, pi;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import '../../core/constants/app_constants.dart';
-import '../../core/audio/audio_manager.dart';
+import '../../../../core/constants/app_constants.dart';
+import '../../../../core/audio/audio_manager.dart';
 
 /// A draggable item that returns to its origin on failed drop
 class DraggableItem<T> extends StatefulWidget {

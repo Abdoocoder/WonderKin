@@ -4,12 +4,12 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
-import '../../core/audio/audio_manager.dart';
-import '../../core/storage/database.dart';
-import '../../shared/models/content_models.dart';
-import '../../shared/widgets/drag_drop/drag_drop_engine.dart';
-import '../../shared/widgets/common/star_rating.dart';
-import '../../shared/widgets/common/animated_button.dart';
+import '../../../core/audio/audio_manager.dart';
+import '../../../core/storage/database.dart';
+import '../../../shared/models/content_models.dart';
+import '../../../shared/widgets/drag_drop/drag_drop_engine.dart';
+import '../../../shared/widgets/common/star_rating.dart';
+import '../../../shared/widgets/common/animated_button.dart';
 
 class StoryScreen extends StatefulWidget {
   final Level level;

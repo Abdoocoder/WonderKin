@@ -1,8 +1,8 @@
 // Common Shared Widgets
-import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../core/theme/app_theme.dart';
+import 'package:confetti/confetti.dart';
+import '../../../../core/theme/app_theme.dart';
 
 // Star Rating Widget
 class StarRating extends StatelessWidget {
@@ -12,7 +12,7 @@ class StarRating extends StatelessWidget {
   final Color filledColor;
   final Color emptyColor;
   final double spacing;
-  
+
   const StarRating({
     super.key,
     required this.stars,
@@ -22,7 +22,7 @@ class StarRating extends StatelessWidget {
     required this.emptyColor,
     this.spacing = 4,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -51,7 +51,7 @@ class AnimatedButton extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
   final BorderRadius? borderRadius;
   final double? elevation;
-  
+
   const AnimatedButton({
     super.key,
     required this.onPressed,
@@ -62,7 +62,7 @@ class AnimatedButton extends StatefulWidget {
     this.borderRadius,
     this.elevation,
   });
-  
+
   @override
   State<AnimatedButton> createState() => _AnimatedButtonState();
 }
@@ -71,8 +71,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
-  bool _pressed = false;
-  
+
   @override
   void initState() {
     super.initState();
@@ -84,33 +83,30 @@ class _AnimatedButtonState extends State<AnimatedButton>
       CurvedAnimation(parent: _controller, curve: Curves.easeOut),
     );
   }
-  
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-  
+
   void _onTapDown(TapDownDetails details) {
-    setState(() => _pressed = true);
     _controller.forward();
   }
-  
+
   void _onTapUp(TapUpDetails details) {
-    setState(() => _pressed = false);
     _controller.reverse();
     widget.onPressed();
   }
-  
+
   void _onTapCancel() {
-    setState(() => _pressed = false);
     _controller.reverse();
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    
+    final ThemeData theme = Theme.of(context);
+
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
@@ -129,9 +125,11 @@ class _AnimatedButtonState extends State<AnimatedButton>
               child: Container(
                 padding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                 child: DefaultTextStyle(
-                  style: theme.textTheme.kidButton.copyWith(
+                  style: theme.textTheme.labelLarge?.copyWith(
                     color: widget.foregroundColor ?? theme.colorScheme.onPrimary,
-                  ),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                  ) ?? const TextStyle(),
                   child: widget.child,
                 ),
               ),
@@ -151,7 +149,7 @@ class KidProgressIndicator extends StatelessWidget {
   final Color? backgroundColor;
   final BorderRadius? borderRadius;
   final Widget? label;
-  
+
   const KidProgressIndicator({
     super.key,
     required this.progress,
@@ -161,11 +159,11 @@ class KidProgressIndicator extends StatelessWidget {
     this.borderRadius,
     this.label,
   });
-  
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    
+    final ThemeData theme = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -174,18 +172,18 @@ class KidProgressIndicator extends StatelessWidget {
           const SizedBox(height: 8),
         ],
         ClipRRect(
-          borderRadius: widget.borderRadius ?? BorderRadius.circular(height / 2),
+          borderRadius: borderRadius ?? BorderRadius.circular(height / 2),
           child: Container(
             height: height,
             width: double.infinity,
-            color: widget.backgroundColor ?? theme.colorScheme.surfaceContainer,
+            color: backgroundColor ?? theme.colorScheme.surfaceContainer,
             child: FractionallySizedBox(
               alignment: Alignment.centerLeft,
               widthFactor: progress.clamp(0.0, 1.0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: widget.progressColor ?? theme.colorScheme.primary,
-                  borderRadius: widget.borderRadius ?? BorderRadius.circular(height / 2),
+                  color: progressColor ?? theme.colorScheme.primary,
+                  borderRadius: borderRadius ?? BorderRadius.circular(height / 2),
                 ),
               ),
             ),
@@ -204,7 +202,7 @@ class SpeakingText extends StatefulWidget {
   final TextStyle? style;
   final TextStyle? highlightedStyle;
   final TextAlign textAlign;
-  
+
   const SpeakingText({
     super.key,
     required this.text,
@@ -214,7 +212,7 @@ class SpeakingText extends StatefulWidget {
     this.highlightedStyle,
     this.textAlign = TextAlign.center,
   });
-  
+
   @override
   State<SpeakingText> createState() => _SpeakingTextState();
 }
@@ -224,18 +222,18 @@ class _SpeakingTextState extends State<SpeakingText>
   late AnimationController _controller;
   late Animation<int> _wordIndexAnimation;
   List<String> _words = [];
-  
+
   @override
   void initState() {
     super.initState();
-    final locale = Localizations.localeOf(context).languageCode;
-    _words = (locale == 'ar' ? widget.textAr : widget.text).split(' ');
-    
+    final Locale locale = Localizations.localeOf(context);
+    _words = (locale.languageCode == 'ar' ? widget.textAr : widget.text).split(' ');
+
     _controller = AnimationController(
       vsync: this,
       duration: widget.estimatedDuration ?? Duration(milliseconds: _words.length * 300),
     );
-    
+
     _wordIndexAnimation = IntTween(
       begin: -1,
       end: _words.length - 1,
@@ -243,39 +241,39 @@ class _SpeakingTextState extends State<SpeakingText>
       parent: _controller,
       curve: Curves.linear,
     ));
-    
+
     _controller.forward();
   }
-  
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-  
+
   void start() => _controller.forward(from: 0);
   void stop() => _controller.stop();
   void reset() => _controller.reset();
-  
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final defaultStyle = widget.style ?? theme.textTheme.bodyLarge?.copyWith(fontSize: 20, height: 1.6) ?? const TextStyle();
-    final defaultHighlightedStyle = widget.highlightedStyle ?? defaultStyle.copyWith(
+    final ThemeData theme = Theme.of(context);
+    final TextStyle defaultStyle = widget.style ?? theme.textTheme.bodyLarge?.copyWith(fontSize: 20, height: 1.6) ?? const TextStyle();
+    final TextStyle defaultHighlightedStyle = widget.highlightedStyle ?? defaultStyle.copyWith(
       color: theme.colorScheme.primary,
       fontWeight: FontWeight.w600,
     );
-    
+
     return AnimatedBuilder(
       animation: _wordIndexAnimation,
       builder: (context, child) {
         return Text.rich(
           TextSpan(
             children: _words.asMap().entries.map((entry) {
-              final index = entry.key;
-              final word = entry.value;
-              final isHighlighted = index <= _wordIndexAnimation.value;
-              
+              final int index = entry.key;
+              final String word = entry.value;
+              final bool isHighlighted = index <= _wordIndexAnimation.value;
+
               return TextSpan(
                 text: '$word ',
                 style: isHighlighted ? defaultHighlightedStyle : defaultStyle,
@@ -295,7 +293,7 @@ class CelebrationOverlay extends StatefulWidget {
   final bool show;
   final VoidCallback? onComplete;
   final List<Color> colors;
-  
+
   const CelebrationOverlay({
     super.key,
     required this.show,
@@ -308,7 +306,7 @@ class CelebrationOverlay extends StatefulWidget {
       Colors.purple,
     ],
   });
-  
+
   @override
   State<CelebrationOverlay> createState() => _CelebrationOverlayState();
 }
@@ -316,7 +314,7 @@ class CelebrationOverlay extends StatefulWidget {
 class _CelebrationOverlayState extends State<CelebrationOverlay>
     with TickerProviderStateMixin {
   late AnimationController _controller;
-  
+
   @override
   void initState() {
     super.initState();
@@ -324,16 +322,16 @@ class _CelebrationOverlayState extends State<CelebrationOverlay>
       vsync: this,
       duration: const Duration(milliseconds: 2000),
     );
-    
+
     if (widget.show) {
       _controller.forward().then((_) {
         widget.onComplete?.call();
       });
     }
   }
-  
+
   @override
-  void didUpdateWidget(covariant CelebrationOverlay oldWidget) {
+  void didUpdateWidget(CelebrationOverlay oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.show && !oldWidget.show) {
       _controller.forward(from: 0).then((_) {
@@ -341,17 +339,17 @@ class _CelebrationOverlayState extends State<CelebrationOverlay>
       });
     }
   }
-  
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     if (!widget.show) return const SizedBox.shrink();
-    
+
     return IgnorePointer(
       child: ConfettiWidget(
         controller: _controller,

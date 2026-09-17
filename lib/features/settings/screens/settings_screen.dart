@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
-import '../../core/audio/audio_manager.dart';
-import '../../core/storage/database.dart';
-import '../../core/constants/app_constants.dart';
-import '../../shared/widgets/common/animated_widgets.dart';
+import '../../../core/audio/audio_manager.dart';
+import '../../../core/storage/database.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../../shared/widgets/common/animated_widgets.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});

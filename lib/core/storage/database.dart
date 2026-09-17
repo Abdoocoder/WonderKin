@@ -38,7 +38,7 @@ class LevelProgress extends Table {
   BoolColumn get isCompleted => boolean().withDefault(const Constant(false))();
   IntColumn get completedAt => integer().nullable()();
   IntColumn get attempts => integer().withDefault(const Constant(0))();
-  IntColumn get bestTimeMs => integer().nullable();
+  IntColumn get bestTimeMs => integer().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};

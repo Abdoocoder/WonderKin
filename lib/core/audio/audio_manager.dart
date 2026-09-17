@@ -59,13 +59,13 @@ class AudioManager {
     session.interruptionEventStream.listen((AudioInterruptionEvent event) {
       if (event.begin) {
         if (event.type == AudioInterruptionType.ducked) {
-          await _musicPlayer.setVolume(_musicVolume * 0.2);
+          unawaited(_musicPlayer.setVolume(_musicVolume * 0.2));
         } else {
-          await pauseMusic();
-          await pauseVoice();
+          unawaited(pauseMusic());
+          unawaited(pauseVoice());
         }
       } else {
-        await _musicPlayer.setVolume(_musicVolume);
+        unawaited(_musicPlayer.setVolume(_musicVolume));
       }
     });
   }
@@ -82,7 +82,7 @@ class AudioManager {
     _currentSfxId = id;
 
     try {
-      final assetPath = _getSfxAssetPath(id);
+      final String assetPath = _getSfxAssetPath(id);
       await _sfxPlayer.setAsset(assetPath);
       await _sfxPlayer.play();
     } catch (e) {
@@ -100,7 +100,7 @@ class AudioManager {
     if (!_initialized) await initialize();
 
     try {
-      final assetPath = _getMusicAssetPath(id);
+      final String assetPath = _getMusicAssetPath(id);
       await _musicPlayer.setAsset(assetPath);
       await _musicPlayer.play();
     } catch (e) {
@@ -129,7 +129,7 @@ class AudioManager {
     await _voicePlayer.stop();
 
     try {
-      final assetPath = _getVoiceAssetPath(id);
+      final String assetPath = _getVoiceAssetPath(id);
       await _voicePlayer.setAsset(assetPath);
       await _voicePlayer.play();
     } catch (e) {
@@ -183,7 +183,7 @@ class AudioManager {
 
   // Preload assets for instant playback
   Future<void> preloadSfx(List<String> ids) async {
-    for (final id in ids) {
+    for (final String id in ids) {
       try {
         await _sfxPlayer.setAsset(_getSfxAssetPath(id));
         await _sfxPlayer.load();
@@ -194,7 +194,7 @@ class AudioManager {
   }
 
   Future<void> preloadMusic(List<String> ids) async {
-    for (final id in ids) {
+    for (final String id in ids) {
       try {
         await _musicPlayer.setAsset(_getMusicAssetPath(id));
         await _musicPlayer.load();

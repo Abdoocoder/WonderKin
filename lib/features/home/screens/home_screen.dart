@@ -2,13 +2,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
+import 'dart:math' show sin;
 import '../../../core/audio/audio_manager.dart';
 import '../../../core/storage/database.dart';
 import '../../../shared/models/content_models.dart';
-import '../story_mode/screens/story_screen.dart';
-import '../puzzle_mode/screens/puzzle_screen.dart';
-import '../sticker_book/screens/sticker_book_screen.dart';
+import '../../story_mode/screens/story_screen.dart';
+import '../../puzzle_mode/screens/puzzle_screen.dart';
+import '../../sticker_book/screens/sticker_book_screen.dart';
 import '../../../shared/widgets/common/star_rating.dart';
+import '../../../shared/widgets/common/animated_widgets.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
