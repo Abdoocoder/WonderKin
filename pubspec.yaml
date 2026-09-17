@@ -1,0 +1,64 @@
+name: kids_adventure_app
+description: عالم المغامرات الذكي - تطبيق قصص وألغاز تفاعلي للأطفال
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  audio_session: ^0.1.25
+  confetti: ^0.8.0
+  drift: ^2.35.0
+  easy_localization: ^3.0.8
+  flutter:
+    sdk: flutter
+  flutter_animate: ^4.5.2
+  flutter_localizations:
+    sdk: flutter
+  flutter_secure_storage: ^11.2.0
+  intl: ^0.20.3
+  just_audio: ^0.9.46
+  path: ^1.9.1
+  path_provider: ^2.1.6
+  provider: ^6.1.5
+  shared_preferences: ^2.5.5
+  sqlite3_flutter_libs: ^0.5.0
+  uuid: ^4.5.3
+
+dev_dependencies:
+  build_runner: ^2.4.11
+  drift_dev: ^2.35.0
+  flutter_launcher_icons: ^0.14.4
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter_launcher_icons:
+  android: "ic_launcher"
+  ios: true
+  image_path: "assets/images/app_icon.png"
+  min_sdk_android: 21
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/i18n/
+    - assets/images/
+    - assets/audio/sfx/
+    - assets/audio/music/
+    - assets/content/
+    - assets/fonts/
+  fonts:
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/Cairo-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Cairo-Bold.ttf
+          weight: 700
+    - family: Amiri
+      fonts:
+        - asset: assets/fonts/Amiri-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Amiri-Bold.ttf
+          weight: 700

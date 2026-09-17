@@ -1,0 +1,122 @@
+{
+  "app_name": "Smart Adventure World",
+  "home": {
+    "title": "Adventure",
+    "subtitle": "World",
+    "adventures": "Adventures",
+    "stickers": "My Stickers",
+    "settings": "Settings",
+    "sound_on": "Sound On",
+    "sound_off": "Sound Off"
+  },
+  "story": {
+    "page_indicator": "Page",
+    "of": "of",
+    "replay_narration": "Replay Narration",
+    "stop_narration": "Stop Narration",
+    "next_page": "Next Page",
+    "previous_page": "Previous Page",
+    "completed": "Story Completed!",
+    "great_job": "Great Job!"
+  },
+  "puzzle": {
+    "title": "Puzzle",
+    "match_items": "Match the items",
+    "drag_to_target": "Drag to target",
+    "time_remaining": "Time Remaining",
+    "time_up": "Time's Up!",
+    "try_again": "Try Again",
+    "completed": "Puzzle Completed!",
+    "great_job": "Excellent Work!"
+  },
+  "sticker_book": {
+    "title": "Sticker Book",
+    "all": "All",
+    "stars": "Stars",
+    "numbers": "Numbers",
+    "shapes": "Shapes",
+    "animals": "Animals",
+    "unlocked": "Unlocked",
+    "locked": "Locked",
+    "complete_adventures": "Complete adventures to unlock stickers",
+    "congratulations": "Congratulations!",
+    "in_collection": "In your collection"
+  },
+  "parental_gate": {
+    "title": "Parental Gate",
+    "locked": "Temporarily Locked",
+    "instruction": "To access parental settings, please solve the following math problem:",
+    "question": "Question",
+    "answer": "Answer",
+    "wrong_answer": "Wrong answer, try again",
+    "too_many_attempts": "Too many attempts, try later",
+    "lockout_time": "Locked for",
+    "seconds": "seconds",
+    "minutes": "minutes",
+    "access_granted": "Access Granted",
+    "cancel": "Cancel"
+  },
+  "settings": {
+    "title": "Settings",
+    "screen_time": "Screen Time",
+    "screen_time_desc": "Daily play time limit",
+    "sound_volume": "Sound Effects Volume",
+    "music_volume": "Music Volume",
+    "language": "Language",
+    "arabic": "Arabic",
+    "english": "English",
+    "reset_progress": "Reset Progress",
+    "reset_confirm": "Are you sure you want to reset all progress?",
+    "reset_done": "Progress reset",
+    "privacy_policy": "Privacy Policy",
+    "about": "About",
+    "version": "Version"
+  },
+  "screen_time": {
+    "rest_time": "Rest Time! 🌙",
+    "rest_message": "Time to rest your eyes and mind.\nYou can play again tomorrow!",
+    "minutes_15": "15 minutes",
+    "minutes_30": "30 minutes",
+    "minutes_45": "45 minutes"
+  },
+  "celebration": {
+    "stars_earned": "Stars Earned!",
+    "sticker_unlocked": "New Sticker!",
+    "level_complete": "Level Complete!",
+    "continue": "Continue",
+    "retry": "Retry"
+  },
+  "common": {
+    "back": "Back",
+    "next": "Next",
+    "close": "Close",
+    "ok": "OK",
+    "yes": "Yes",
+    "no": "No",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry"
+  },
+  "skills": {
+    "letters": "Letters",
+    "numbers": "Numbers",
+    "shapes": "Shapes",
+    "colors": "Colors",
+    "animals": "Animals",
+    "fruits": "Fruits",
+    "vehicles": "Vehicles",
+    "logic": "Logic",
+    "memory": "Memory",
+    "fine_motor": "Fine Motor Skills"
+  },
+  "levels": {
+    "level_1_title": "First Letters",
+    "level_2_title": "Fun Numbers",
+    "level_3_title": "Shape Friends",
+    "level_4_title": "Animal Homes",
+    "level_1_desc": "Learn letters with fun stories",
+    "level_2_desc": "Arrange numbers in order",
+    "level_3_desc": "Discover shapes and colors",
+    "level_4_desc": "Sort animals by their homes"
+  }
+}

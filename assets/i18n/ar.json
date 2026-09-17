@@ -1,0 +1,122 @@
+{
+  "app_name": "عالم المغامرات الذكي",
+  "home": {
+    "title": "عالم المغامرات",
+    "subtitle": "الذكي",
+    "adventures": "المغامرات",
+    "stickers": "ملصقاتي",
+    "settings": "الإعدادات",
+    "sound_on": "الصوت مفعل",
+    "sound_off": "الصوت معطل"
+  },
+  "story": {
+    "page_indicator": "صفحة",
+    "of": "من",
+    "replay_narration": "إعادة السرد",
+    "stop_narration": "إيقاف السرد",
+    "next_page": "الصفحة التالية",
+    "previous_page": "الصفحة السابقة",
+    "completed": "أكملت القصة!",
+    "great_job": "أحسنت!"
+  },
+  "puzzle": {
+    "title": "لغز",
+    "match_items": "قم بمطابقة العناصر",
+    "drag_to_target": "اسحب إلى الهدف",
+    "time_remaining": "الوقت المتبقي",
+    "time_up": "انتهى الوقت!",
+    "try_again": "حاول مرة أخرى",
+    "completed": "أكملت اللغز!",
+    "great_job": "عمل ممتاز!"
+  },
+  "sticker_book": {
+    "title": "ألبوم الملصقات",
+    "all": "الكل",
+    "stars": "نجوم",
+    "numbers": "أرقام",
+    "shapes": "أشكال",
+    "animals": "حيوانات",
+    "unlocked": "مفتوحة",
+    "locked": "مقفلة",
+    "complete_adventures": "أكمل المغامرات لفتح الملصقات",
+    "congratulations": "تهانينا!",
+    "in_collection": "في مجموعتك"
+  },
+  "parental_gate": {
+    "title": "بوابة الأهل",
+    "locked": "مُقفل مؤقتاً",
+    "instruction": "للوصول إلى إعدادات الأهل، يرجى حل العملية الحسابية التالية:",
+    "question": "سؤال",
+    "answer": "الإجابة",
+    "wrong_answer": "إجابة خاطئة، حاول مرة أخرى",
+    "too_many_attempts": "محاولات كثيرة، حاول لاحقاً",
+    "lockout_time": "مُقفل لمدة",
+    "seconds": "ثانية",
+    "minutes": "دقيقة",
+    "access_granted": "تم السماح بالوصول",
+    "cancel": "إلغاء"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "screen_time": "وقت الشاشة",
+    "screen_time_desc": "حد يومي لوقت اللعب",
+    "sound_volume": "مستوى المؤثرات الصوتية",
+    "music_volume": "مستوى الموسيقى",
+    "language": "اللغة",
+    "arabic": "العربية",
+    "english": "الإنجليزية",
+    "reset_progress": "إعادة تعيين التقدم",
+    "reset_confirm": "هل أنت متأكد من إعادة تعيين كل التقدم؟",
+    "reset_done": "تم إعادة التعيين",
+    "privacy_policy": "سياسة الخصوصية",
+    "about": "حول التطبيق",
+    "version": "الإصدار"
+  },
+  "screen_time": {
+    "rest_time": "وقت الراحة! 🌙",
+    "rest_message": "حان وقت استراحة عينيك وعقلك.\nيمكنك اللعب مرة أخرى غداً!",
+    "minutes_15": "15 دقيقة",
+    "minutes_30": "30 دقيقة",
+    "minutes_45": "45 دقيقة"
+  },
+  "celebration": {
+    "stars_earned": "حصلت على نجوم!",
+    "sticker_unlocked": "ملصقة جديدة!",
+    "level_complete": "أكملت المستوى!",
+    "continue": "متابعة",
+    "retry": "إعادة المحاولة"
+  },
+  "common": {
+    "back": "رجوع",
+    "next": "التالي",
+    "close": "إغلاق",
+    "ok": "موافق",
+    "yes": "نعم",
+    "no": "لا",
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ",
+    "retry": "إعادة المحاولة"
+  },
+  "skills": {
+    "letters": "الحروف",
+    "numbers": "الأرقام",
+    "shapes": "الأشكال",
+    "colors": "الألوان",
+    "animals": "الحيوانات",
+    "fruits": "الفواكه",
+    "vehicles": "المركبات",
+    "logic": "المنطق",
+    "memory": "الذاكرة",
+    "fine_motor": "المهارات الحركية الدقيقة"
+  },
+  "levels": {
+    "level_1_title": "الحروف الأولى",
+    "level_2_title": "الأرقام المرحة",
+    "level_3_title": "أصدقاء الأشكال",
+    "level_4_title": "بيوت الحيوانات",
+    "level_1_desc": "تعرف على الحروف مع قصص ممتعة",
+    "level_2_desc": "رتب الأرقام بالترتيب الصحيح",
+    "level_3_desc": "اكتشف الأشكال والألوان",
+    "level_4_desc": "صنف الحيوانات حسب بيوتها"
+  }
+}
