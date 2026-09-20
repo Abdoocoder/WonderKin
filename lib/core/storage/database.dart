@@ -108,6 +108,10 @@ DatabaseConnection _openConnection() {
           return p.join(dir.path, 'kids_adventure.db');
         },
       ),
+      web: DriftWebOptions(
+        sqlite3Wasm: Uri.parse('sqlite3.wasm'),
+        driftWorker: Uri.parse('drift_worker.dart.js'),
+      ),
     );
   }
 
