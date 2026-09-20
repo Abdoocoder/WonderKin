@@ -1,4 +1,5 @@
 // Parental Gate - Math challenge for parent access
+import 'dart:math' show sin;
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';

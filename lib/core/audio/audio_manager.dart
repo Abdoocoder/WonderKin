@@ -2,6 +2,7 @@
 import 'package:just_audio/just_audio.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/foundation.dart';
+import 'dart:async' show unawaited;
 import '../constants/app_constants.dart';
 
 class AudioManager {
@@ -28,12 +29,10 @@ class AudioManager {
 
     // Configure audio session for game-like behavior
     final AudioSession session = await AudioSession.instance;
-    await session.configure(const AudioSessionConfiguration(
+    await session.configure( AudioSessionConfiguration(
       avAudioSessionCategory: AVAudioSessionCategory.ambient,
-      avAudioSessionCategoryOptions: <AVAudioSessionCategoryOptions>[
-        AVAudioSessionCategoryOptions.mixWithOthers,
-        AVAudioSessionCategoryOptions.allowBluetooth,
-      ],
+      avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.mixWithOthers |
+          AVAudioSessionCategoryOptions.allowBluetooth,
       avAudioSessionMode: AVAudioSessionMode.defaultMode,
     ));
 
@@ -58,12 +57,8 @@ class AudioManager {
 
     session.interruptionEventStream.listen((AudioInterruptionEvent event) {
       if (event.begin) {
-        if (event.type == AudioInterruptionType.ducked) {
-          unawaited(_musicPlayer.setVolume(_musicVolume * 0.2));
-        } else {
-          unawaited(pauseMusic());
-          unawaited(pauseVoice());
-        }
+        unawaited(pauseMusic());
+        unawaited(pauseVoice());
       } else {
         unawaited(_musicPlayer.setVolume(_musicVolume));
       }

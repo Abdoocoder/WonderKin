@@ -6,10 +6,11 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import '../../../core/audio/audio_manager.dart';
 import '../../../core/storage/database.dart';
+import '../../../core/theme/text_styles.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../shared/models/content_models.dart';
 import '../../../shared/widgets/drag_drop/drag_drop_engine.dart';
-import '../../../shared/widgets/common/star_rating.dart';
-import '../../../shared/widgets/common/animated_button.dart';
+import '../../../shared/widgets/common/animated_widgets.dart';
 
 class StoryScreen extends StatefulWidget {
   final Level level;
@@ -70,9 +71,9 @@ class _StoryScreenState extends State<StoryScreen> with TickerProviderStateMixin
     }
   }
   
-  void _onItemMatched(String itemId, String targetId) {
+  void _onItemMatched(DraggableItemData itemData, String targetId) {
     setState(() {
-      _matchedItems.add(itemId);
+      _matchedItems.add(itemData.id);
       _pageCompleted = _checkPageComplete();
     });
     
@@ -83,7 +84,7 @@ class _StoryScreenState extends State<StoryScreen> with TickerProviderStateMixin
     }
   }
   
-  void _onItemMismatched(String itemId) {
+  void _onItemMismatched(DraggableItemData itemData) {
     setState(() {
       _mistakes++;
     });
@@ -370,8 +371,8 @@ class _StoryPageView extends StatelessWidget {
   final Map<String, Offset> itemPositions;
   final Set<String> matchedItems;
   final bool isCurrentPage;
-  final void Function(String itemId, String targetId) onItemMatched;
-  final void Function(String itemId) onItemMismatched;
+  final void Function(DraggableItemData itemData, String targetId) onItemMatched;
+  final void Function(DraggableItemData itemData) onItemMismatched;
   
   const _StoryPageView({
     required this.page,
@@ -547,7 +548,7 @@ class _BackgroundPainter extends CustomPainter {
     for (int i = 0; i < 10; i++) {
       final x = (size.width * (i * 0.1 + 0.05)) % size.width;
       final y = size.height * 0.3 + (i * 40.0) % (size.height * 0.5);
-      final radius = 15 + (i % 5) * 10;
+      final double radius = 15 + (i % 5) * 10;
       canvas.drawCircle(Offset(x, y), radius, paint);
     }
   }
@@ -723,8 +724,8 @@ class _StoryDragDropArea extends StatelessWidget {
   final Map<String, Offset> itemPositions;
   final Set<String> matchedItems;
   final bool isCurrentPage;
-  final void Function(String itemId, String targetId) onItemMatched;
-  final void Function(String itemId) onItemMismatched;
+  final void Function(DraggableItemData itemData, String targetId) onItemMatched;
+  final void Function(DraggableItemData itemData) onItemMismatched;
   
   const _StoryDragDropArea({
     required this.page,
@@ -741,9 +742,10 @@ class _StoryDragDropArea extends StatelessWidget {
       return const SizedBox.shrink();
     }
     
+    // Import DragDropItem and DragDropTarget from drag_drop_engine.dart
     final items = page.draggableItems!.map((item) {
       final isMatched = matchedItems.contains(item.id);
-      return DraggableItemData<DraggableItemData>(
+      return DragDropItem<DraggableItemData>(
         data: item,
         position: itemPositions[item.id] ?? item.position,
         child: _DraggableStoryItem(
@@ -754,7 +756,7 @@ class _StoryDragDropArea extends StatelessWidget {
     }).toList();
     
     final targets = page.dropTargets!.map((target) {
-      return DropTargetData<DraggableItemData>(
+      return DragDropTarget<DraggableItemData>(
         id: target.id,
         expectedData: page.draggableItems!.firstWhere(
           (item) => item.id == target.expectedItemId,
@@ -994,7 +996,7 @@ class _CelebrationDialog extends StatefulWidget {
 class _CelebrationDialogState extends State<_CelebrationDialog>
     with TickerProviderStateMixin {
   late AnimationController _starController;
-  late AnimationController _confettiController;
+  late ConfettiController _confettiController;
   
   @override
   void initState() {
@@ -1005,13 +1007,12 @@ class _CelebrationDialogState extends State<_CelebrationDialog>
       duration: const Duration(milliseconds: 1500),
     );
     
-    _confettiController = AnimationController(
-      vsync: this,
+    _confettiController = ConfettiController(
       duration: const Duration(milliseconds: 2000),
     );
     
     _starController.forward();
-    _confettiController.forward();
+    _confettiController.play();
   }
   
   @override
@@ -1037,21 +1038,16 @@ class _CelebrationDialogState extends State<_CelebrationDialog>
           mainAxisSize: MainAxisSize.min,
           children: [
             // Confetti
-            AnimatedBuilder(
-              animation: _confettiController,
-              builder: (context, child) {
-                return ConfettiWidget(
-                  controller: _confettiController,
-                  blastDirectionality: BlastDirectionality.explosive,
-                  shouldLoop: false,
-                  colors: [
-                    theme.colorScheme.primary,
-                    theme.colorScheme.secondary,
-                    theme.colorScheme.tertiary,
-                    theme.colorScheme.error,
-                  ],
-                );
-              },
+            ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirectionality: BlastDirectionality.explosive,
+              shouldLoop: false,
+              colors: [
+                theme.colorScheme.primary,
+                theme.colorScheme.secondary,
+                theme.colorScheme.tertiary,
+                theme.colorScheme.error,
+              ],
             ),
             
             // Stars
@@ -1141,7 +1137,7 @@ class _CelebrationDialogState extends State<_CelebrationDialog>
               onPressed: widget.onContinue,
               child: Text(
                 'متابعة',
-                style: theme.textTheme.kidButton,
+                style: AppTextStyles.kidButton,
               ),
             ),
           ],

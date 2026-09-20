@@ -1,7 +1,6 @@
 // Drift Database - Offline-first local storage (Updated for Drift 2.x)
-import 'dart:io';
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
+import 'package:drift_flutter/drift_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
@@ -75,17 +74,21 @@ class AppDatabase extends _$AppDatabase {
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (Migrator m) async {
       await m.createAll();
-      // Insert default settings
-      await m.into(settings).insert(SettingsCompanion.insert(
-        id: const Value(1),
-        dailyLimitMinutes: const Value(30),
-        soundVolume: const Value(1.0),
-        musicVolume: const Value(0.7),
-        parentalGateEnabled: const Value(true),
-      ));
     },
     onUpgrade: (Migrator m, int from, int to) async {
       // Handle future migrations
+    },
+    beforeOpen: (details) async {
+      // Insert default settings after database is created
+      if (details.wasCreated) {
+        await into(settings).insert(SettingsCompanion.insert(
+          id: const Value(1),
+          dailyLimitMinutes: const Value(30),
+          soundVolume: const Value(1.0),
+          musicVolume: const Value(0.7),
+          parentalGateEnabled: const Value(true),
+        ));
+      }
     },
   );
 
@@ -96,13 +99,17 @@ class AppDatabase extends _$AppDatabase {
   StickerCollectionDao get stickerCollectionDao => StickerCollectionDao(this);
 }
 
-LazyDatabase _openConnection() {
-  return LazyDatabase(() async {
-    final Directory dbFolder = await getApplicationDocumentsDirectory();
-    final File file = File(p.join(dbFolder.path, 'kids_adventure.db'));
-    return NativeDatabase.createInBackground(file);
-  });
-}
+DatabaseConnection _openConnection() {
+    return driftDatabase(
+      name: 'kids_adventure',
+      native: DriftNativeOptions(
+        databasePath: () async {
+          final dir = await getApplicationDocumentsDirectory();
+          return p.join(dir.path, 'kids_adventure.db');
+        },
+      ),
+    );
+  }
 
 // DAOs
 class ProfileDao {

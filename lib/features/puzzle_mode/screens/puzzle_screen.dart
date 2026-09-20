@@ -7,10 +7,11 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import '../../../core/audio/audio_manager.dart';
 import '../../../core/storage/database.dart';
+import '../../../core/theme/text_styles.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../shared/models/content_models.dart';
 import '../../../shared/widgets/drag_drop/drag_drop_engine.dart';
-import '../../../shared/widgets/common/star_rating.dart';
-import '../../../shared/widgets/common/animated_button.dart';
+import '../../../shared/widgets/common/animated_widgets.dart';
 
 class PuzzleScreen extends StatefulWidget {
   final Level level;
@@ -86,9 +87,9 @@ class _PuzzleScreenState extends State<PuzzleScreen> with TickerProviderStateMix
     super.dispose();
   }
   
-  void _onItemMatched(String itemId, String targetId) {
+  void _onItemMatched(PuzzleItem itemData, String targetId) {
     setState(() {
-      _matchedItems.add(itemId);
+      _matchedItems.add(itemData.id);
       _matchedCount++;
     });
     
@@ -101,7 +102,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> with TickerProviderStateMix
     }
   }
   
-  void _onItemMismatched(String itemId) {
+  void _onItemMismatched(PuzzleItem itemData) {
     setState(() {
       _mistakes++;
     });
@@ -269,7 +270,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> with TickerProviderStateMix
     // Build items
     final items = puzzle.items.map((item) {
       final isMatched = _matchedItems.contains(item.id);
-      return DraggableItemData<PuzzleItem>(
+      return DragDropItem<PuzzleItem>(
         data: item,
         position: _itemPositions[item.id] ?? item.startPosition,
         child: _DraggablePuzzleItem(
@@ -281,7 +282,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> with TickerProviderStateMix
     
     // Build targets
     final targets = puzzle.targets.map((target) {
-      return DropTargetData<PuzzleItem>(
+      return DragDropTarget<PuzzleItem>(
         id: target.id,
         expectedData: puzzle.items.firstWhere(
           (item) => puzzle.matching[item.id] == target.id,
@@ -482,9 +483,13 @@ class _DraggablePuzzleItem extends StatelessWidget {
   }
   
   Widget _buildShape(String shape, Color color) {
+    final shapeType = ShapeType.values.firstWhere(
+      (e) => e.name == shape,
+      orElse: () => ShapeType.circle,
+    );
     return CustomPaint(
       size: Size(AppConstants.dragItemSize * 0.6, AppConstants.dragItemSize * 0.6),
-      painter: _ShapePainter(shape: shape, color: color),
+      painter: ShapePainter(shape: shapeType, color: color),
     );
   }
 }
@@ -660,12 +665,17 @@ class _PuzzleCelebrationDialog extends StatefulWidget {
 
 class _PuzzleCelebrationDialogState extends State<_PuzzleCelebrationDialog>
     with TickerProviderStateMixin {
-  late AnimationController _controller;
+  late ConfettiController _confettiController;
+  late AnimationController _starController;
   
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
+    _confettiController = ConfettiController(
+      duration: const Duration(milliseconds: 1500),
+    )..play();
+    
+    _starController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
     )..forward();
@@ -673,7 +683,8 @@ class _PuzzleCelebrationDialogState extends State<_PuzzleCelebrationDialog>
   
   @override
   void dispose() {
-    _controller.dispose();
+    _confettiController.dispose();
+    _starController.dispose();
     super.dispose();
   }
   
@@ -694,7 +705,7 @@ class _PuzzleCelebrationDialogState extends State<_PuzzleCelebrationDialog>
           children: [
             if (!widget.ranOutOfTime)
               ConfettiWidget(
-                controller: _controller,
+                confettiController: _confettiController,
                 blastDirectionality: BlastDirectionality.explosive,
                 shouldLoop: false,
                 colors: [
@@ -706,7 +717,7 @@ class _PuzzleCelebrationDialogState extends State<_PuzzleCelebrationDialog>
             
             // Stars or Time Up
             AnimatedBuilder(
-              animation: _controller,
+              animation: _starController,
               builder: (context, child) {
                 if (widget.ranOutOfTime) {
                   return Column(
@@ -732,7 +743,7 @@ class _PuzzleCelebrationDialogState extends State<_PuzzleCelebrationDialog>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(3, (index) {
                     final delay = index * 200;
-                    final animValue = (_controller.value * 1500 - delay).clamp(0, 500) / 500;
+                    final animValue = (_starController.value * 1500 - delay).clamp(0, 500) / 500;
                     
                     return Transform.scale(
                       scale: animValue.clamp(0, 1),
@@ -815,7 +826,7 @@ class _PuzzleCelebrationDialogState extends State<_PuzzleCelebrationDialog>
               onPressed: widget.onContinue,
               child: Text(
                 widget.ranOutOfTime ? 'إعادة المحاولة' : 'متابعة',
-                style: theme.textTheme.kidButton,
+                style: AppTextStyles.kidButton,
               ),
             ),
           ],

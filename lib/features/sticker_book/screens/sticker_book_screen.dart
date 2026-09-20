@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import '../../../core/audio/audio_manager.dart';
 import '../../../core/storage/database.dart';
+import '../../../core/theme/text_styles.dart';
 import '../../../shared/models/content_models.dart';
 
 class StickerBookScreen extends StatefulWidget {
@@ -633,7 +634,7 @@ class _StickerDetailSheetState extends State<_StickerDetailSheet>
               ),
               child: Text(
                 'إغلاق',
-                style: theme.textTheme.kidButton,
+                style: AppTextStyles.kidButton,
               ),
             ),
           ),

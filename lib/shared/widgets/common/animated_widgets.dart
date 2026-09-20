@@ -1,8 +1,6 @@
 // Common Shared Widgets
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:confetti/confetti.dart';
-import '../../../../core/theme/app_theme.dart';
 
 // Star Rating Widget
 class StarRating extends StatelessWidget {
@@ -313,19 +311,21 @@ class CelebrationOverlay extends StatefulWidget {
 
 class _CelebrationOverlayState extends State<CelebrationOverlay>
     with TickerProviderStateMixin {
-  late AnimationController _controller;
+  late ConfettiController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
+    _controller = ConfettiController(
       duration: const Duration(milliseconds: 2000),
     );
 
     if (widget.show) {
-      _controller.forward().then((_) {
-        widget.onComplete?.call();
+      _controller.play();
+      Future.delayed(const Duration(milliseconds: 2000), () {
+        if (mounted) {
+          widget.onComplete?.call();
+        }
       });
     }
   }
@@ -334,8 +334,11 @@ class _CelebrationOverlayState extends State<CelebrationOverlay>
   void didUpdateWidget(CelebrationOverlay oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.show && !oldWidget.show) {
-      _controller.forward(from: 0).then((_) {
-        widget.onComplete?.call();
+      _controller.play();
+      Future.delayed(const Duration(milliseconds: 2000), () {
+        if (mounted) {
+          widget.onComplete?.call();
+        }
       });
     }
   }
@@ -352,7 +355,7 @@ class _CelebrationOverlayState extends State<CelebrationOverlay>
 
     return IgnorePointer(
       child: ConfettiWidget(
-        controller: _controller,
+        confettiController: _controller,
         blastDirectionality: BlastDirectionality.explosive,
         shouldLoop: false,
         colors: widget.colors,

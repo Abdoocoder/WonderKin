@@ -2,9 +2,9 @@
 // Single-touch guard, snap-to-target, return animation
 import 'dart:math' show cos, sin, pi;
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/rendering.dart';
 import '../../../../core/constants/app_constants.dart';
-import '../../../../core/audio/audio_manager.dart';
 
 /// A draggable item that returns to its origin on failed drop
 class DraggableItem<T> extends StatefulWidget {
@@ -33,14 +33,15 @@ class _DraggableItemState<T> extends State<DraggableItem<T>>
     with SingleTickerProviderStateMixin {
   late AnimationController _returnController;
   late Animation<Offset> _returnAnimation;
-  Offset _currentPosition;
+  late Offset _currentPosition;
   bool _isDragging = false;
-  int? _activePointer;
+  int _activePointer = 0;
   
   @override
   void initState() {
     super.initState();
     _currentPosition = widget.initialPosition;
+    _activePointer = 0;
     
     _returnController = AnimationController(
       vsync: this,
@@ -74,8 +75,8 @@ class _DraggableItemState<T> extends State<DraggableItem<T>>
     if (!widget.enabled) return;
     
     // Single-touch guard: only accept first pointer
-    if (_activePointer != null) return;
-    _activePointer = details.pointer;
+    if (_activePointer != 0) return;
+    _activePointer = 1;
     
     setState(() {
       _isDragging = true;
@@ -90,7 +91,7 @@ class _DraggableItemState<T> extends State<DraggableItem<T>>
   
   void _handlePanUpdate(DragUpdateDetails details) {
     // Single-touch guard: ignore other pointers
-    if (_activePointer != details.pointer) return;
+    if (_activePointer != 1) return;
     if (!widget.enabled) return;
     
     setState(() {
@@ -100,8 +101,8 @@ class _DraggableItemState<T> extends State<DraggableItem<T>>
   
   void _handlePanEnd(DragEndDetails details) {
     // Single-touch guard
-    if (_activePointer != details.pointer) return;
-    _activePointer = null;
+    if (_activePointer != 1) return;
+    _activePointer = 0;
     
     setState(() {
       _isDragging = false;
@@ -111,7 +112,7 @@ class _DraggableItemState<T> extends State<DraggableItem<T>>
   }
   
   void _handlePanCancel() {
-    _activePointer = null;
+    _activePointer = 0;
     setState(() {
       _isDragging = false;
     });
@@ -121,7 +122,7 @@ class _DraggableItemState<T> extends State<DraggableItem<T>>
   
   /// Call this when drop succeeds (snaps to target)
   void snapToTarget(Offset targetPosition, {VoidCallback? onComplete}) {
-    _activePointer = null;
+    _activePointer = 0;
     _isDragging = false;
     
     final controller = AnimationController(
@@ -205,7 +206,7 @@ class _DraggableItemState<T> extends State<DraggableItem<T>>
 }
 
 /// A drop target that validates matches and triggers callbacks
-class DropTarget<T> extends StatefulWidget {
+class DropTarget<T extends Object> extends StatefulWidget {
   final String targetId;
   final T? expectedData; // The data that matches this target
   final Widget child;
@@ -229,7 +230,7 @@ class DropTarget<T> extends StatefulWidget {
   State<DropTarget<T>> createState() => _DropTargetState<T>();
 }
 
-class _DropTargetState<T> extends State<DropTarget<T>>
+class _DropTargetState<T extends Object> extends State<DropTarget<T>>
     with SingleTickerProviderStateMixin {
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
@@ -344,9 +345,9 @@ class _DropTargetState<T> extends State<DropTarget<T>>
 }
 
 /// Orchestrates multiple draggable items and drop targets
-class DragDropArea<T> extends StatefulWidget {
-  final List<DraggableItemData<T>> items;
-  final List<DropTargetData<T>> targets;
+class DragDropArea<T extends Object> extends StatefulWidget {
+  final List<DragDropItem<T>> items;
+  final List<DragDropTarget<T>> targets;
   final Widget Function(BuildContext, List<Widget>, List<Widget>) builder;
   final void Function(T itemData, String targetId)? onMatch;
   final void Function(T itemData)? onMismatch;
@@ -368,25 +369,25 @@ class DragDropArea<T> extends StatefulWidget {
   State<DragDropArea<T>> createState() => _DragDropAreaState<T>();
 }
 
-class DraggableItemData<T> {
+class DragDropItem<T> {
   final T data;
   final Widget child;
   final Offset position;
   
-  const DraggableItemData({
+  const DragDropItem({
     required this.data,
     required this.child,
     required this.position,
   });
 }
 
-class DropTargetData<T> {
+class DragDropTarget<T> {
   final String id;
   final T? expectedData;
   final Widget child;
   final Offset position;
   
-  const DropTargetData({
+  const DragDropTarget({
     required this.id,
     this.expectedData,
     required this.child,
@@ -394,7 +395,7 @@ class DropTargetData<T> {
   });
 }
 
-class _DragDropAreaState<T> extends State<DragDropArea<T>> {
+class _DragDropAreaState<T extends Object> extends State<DragDropArea<T>> {
   final Map<T, GlobalKey> _itemKeys = {};
   final Map<String, GlobalKey> _targetKeys = {};
   final Set<T> _matchedItems = {};
@@ -437,7 +438,7 @@ class _DragDropAreaState<T> extends State<DragDropArea<T>> {
     
     // Animate return to origin
     final key = _itemKeys[data];
-    if (key.currentContext != null) {
+    if (key?.currentContext != null) {
       // The DraggableItem will handle return animation
     }
   }
@@ -491,13 +492,13 @@ class DragDropShapeMatch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final items = shapes.map((s) => DraggableItemData<ShapeItem>(
+    final items = shapes.map((s) => DragDropItem<ShapeItem>(
       data: s,
       position: s.startPosition,
       child: ShapeWidget(shape: s.shape, color: s.color, size: AppConstants.dragItemSize),
     )).toList();
     
-    final targets = shapes.map((s) => DropTargetData<ShapeItem>(
+    final targets = shapes.map((s) => DragDropTarget<ShapeItem>(
       id: s.id,
       expectedData: s,
       position: s.targetPosition,
@@ -557,7 +558,7 @@ class ShapeWidget extends StatelessWidget {
       width: size,
       height: size,
       child: CustomPaint(
-        painter: _ShapePainter(shape: shape, color: color),
+        painter: ShapePainter(shape: shape, color: color),
       ),
     );
   }
@@ -579,17 +580,17 @@ class ShapeOutlineWidget extends StatelessWidget {
       width: size,
       height: size,
       child: CustomPaint(
-        painter: _ShapeOutlinePainter(shape: shape),
+        painter: ShapeOutlinePainter(shape: shape),
       ),
     );
   }
 }
 
-class _ShapePainter extends CustomPainter {
+class ShapePainter extends CustomPainter {
   final ShapeType shape;
   final Color color;
   
-  _ShapePainter({required this.shape, required this.color});
+  ShapePainter({required this.shape, required this.color});
   
   @override
   void paint(Canvas canvas, Size size) {
@@ -689,10 +690,10 @@ class _ShapePainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-class _ShapeOutlinePainter extends CustomPainter {
+class ShapeOutlinePainter extends CustomPainter {
   final ShapeType shape;
   
-  _ShapeOutlinePainter({required this.shape});
+  ShapeOutlinePainter({required this.shape});
   
   @override
   void paint(Canvas canvas, Size size) {

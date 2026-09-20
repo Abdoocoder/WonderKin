@@ -9,7 +9,7 @@ import '../../../shared/models/content_models.dart';
 import '../../story_mode/screens/story_screen.dart';
 import '../../puzzle_mode/screens/puzzle_screen.dart';
 import '../../sticker_book/screens/sticker_book_screen.dart';
-import '../../../shared/widgets/common/star_rating.dart';
+import '../../parental_gate/parental_gate.dart';
 import '../../../shared/widgets/common/animated_widgets.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -287,8 +287,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               itemCount: unlockedLevels.length,
               itemBuilder: (context, index) {
                 final level = unlockedLevels[index];
-                final progress = progressSnapshot.data
-                    ?.firstWhere((p) => p.levelId == level.id, orElse: () => null);
+                final LevelProgressData? progress = progressSnapshot.data
+                    ?.firstWhere((p) => p.levelId == level.id);
                 
                 return _LevelCard(
                   level: level,
@@ -492,7 +492,7 @@ class _TabButton extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   label,
-                  style: theme.textStyle.labelMedium?.copyWith(
+                  style: theme.textTheme.labelMedium?.copyWith(
                     color: selected 
                         ? theme.colorScheme.primary 
                         : theme.colorScheme.onSurfaceVariant,
